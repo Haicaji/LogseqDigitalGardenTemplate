@@ -1,5 +1,7 @@
 # LogseqDigitalGardenTemplate
 
+[**中文简体**](./README.md) | [**English**](./README-EN.md)
+
 使你更轻松的发布Logseq图谱, 作为自己的数字花园
 
 <!-- PROJECT SHIELDS -->
@@ -7,10 +9,32 @@
 [![Forks][forks-shield]][forks-url]
 [![Stargazers][stars-shield]][stars-url]
 [![Issues][issues-shield]][issues-url]
- 
+
+## 注意
+
+由于 Github 上传文件大小限制, 以下文件并未上传, 但是你可以在 [releases](https://github.com/Haicaji/LogseqDigitalGardenTemplate/releases) 下载完整的包
+
+```
+/publish-spa/
+/OtherDependencies/
+/logseq/
+/Node/
+```
+
 ## 目录
 
-
+* [功能简述](#功能简述)
+* [上手指南](#上手指南)
+    * [使用要求](#使用要求)
+    * [部署流程](#部署流程)
+        * [babashka安装](#babashka安装)
+        * [Clojure安装](#clojure安装)
+        * [生成静态html页面模板](#生成静态html页面模板)
+        * [初始化 /GraphsFile/ 目录](#初始化-graphsfile-目录)
+        * [初始化 /PublishWeb/ 目录](#初始化-publishweb-目录)
+        * [随便写点东西测试一下吧](#随便写点东西测试一下吧)
+* [文件目录说明](#文件目录说明)
+* [该项目使用到的其他项目](#该项目使用到的其他项目)
 
 ### 功能简述
 
