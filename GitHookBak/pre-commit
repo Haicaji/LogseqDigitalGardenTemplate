@@ -1,0 +1,12 @@
+#!/bin/sh
+
+# 日志记录格式
+# $year-$month-$day $hour:$minute:$second $log_text
+
+# 获取当前路径
+current_path=$(pwd)
+# 设置日志路径
+log_file_name="$current_path/../upload.log"
+
+# 写入日志: "开始上传"
+echo "$(date '+%Y-%m-%d %H:%M:%S') 开始上传(Start to upload)" >> $log_file_name
