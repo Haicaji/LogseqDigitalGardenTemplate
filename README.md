@@ -30,9 +30,11 @@
         * [babashka安装](#babashka安装)
         * [Clojure安装](#clojure安装)
         * [生成静态html页面模板](#生成静态html页面模板)
+        * [安装 publish-spa](#安装-publish-spa)
         * [初始化 /GraphsFile/ 目录](#初始化-graphsfile-目录)
         * [初始化 /PublishWeb/ 目录](#初始化-publishweb-目录)
         * [随便写点东西测试一下吧](#随便写点东西测试一下吧)
+* [改变页面样式](#改变页面样式)
 * [文件目录说明](#文件目录说明)
 * [该项目使用到的其他项目](#该项目使用到的其他项目)
 
@@ -42,6 +44,7 @@
 2. 将图片格式(除gif)转为 `avif` 以节省空间, 但命名并未改变
 3. 通过 `Logseq-Publish-spa` 生成 Logseq 图谱的网页
 4. 将 Logseq 图谱网页上传 Github, 并通过发布
+5. 自动删除 Github 的 deployments 和 workflow 记录
 
 ### 上手指南
 
@@ -75,8 +78,8 @@ git clone https://github.com/logseq/logseq
 然后进入 logseq 目录, 安装依赖并生成模板(为什么我不安装好后再打包? 因为这一步会使整个项目体积增加快 2G, 我想还是自己安装比较好, 其他的依赖都安装好了)
 
 ```
-$env:Path += ";$((Convert-Path -Path '../Node/'))" # 将 ../Node/ 临时添加进环境变量
 cd logseq
+$env:Path += ";$((Convert-Path -Path '../Node/'))" # 将 ../Node/ 临时添加进环境变量
 yarn install --frozen-lockfile # 这里注意网络连接, 网络不好的情况下, 会断连, 需要重新执行
 yarn gulp:build
 clojure -M:cljs release publishing
@@ -100,6 +103,15 @@ clojure -M:cljs release publishing
 Set-ExecutionPolicy Remotesigned -Scope CurrentUser
 ```
 
+##### 安装 publish-spa
+
+在 /publish-spa/ 下, 执行
+
+```
+$env:Path += ";$((Convert-Path -Path '../Node/'))" # 将 ../Node/ 临时添加进环境变量
+npm i -g
+```
+
 ##### 初始化 /GraphsFile/ 目录
 
 使用Logseq在 /GraphsFile/ 目录初始化一个图谱, 一般情况下, 如果图谱内没有图片, 是该目录下是不会有 `assets` 文件的, 但是为了后续调试, 你可以先自己创建一个
@@ -118,9 +130,7 @@ git commit -m "Init"
 
 ##### 初始化 /PublishWeb/ 目录
 
-> 在生成 Logseq 网页前, 请先在 Logseq 中设置要发布哪些页面, 或者全部发布
-
-在这个目录下, 已经写入了两个工作流, 用于自动删除 Github 的 deployments 和 workflow 记录
+在这个目录下, 已经写入了两个工作流, 其中 `delete-workflow-runs.yml` 用于自动删除 Github 的 deployments 和 workflow 记录, 而 `static.yml` 是用来生成 Github Page 页面
 
 但是记得把 /.github/delete-workflow-runs.yml 中的仓库名称写为你自己的
 ```
@@ -153,6 +163,12 @@ git remote add origin <你的Github仓库的地址>
 ##### 随便写点东西测试一下吧
 
 开启 Logseq 的自动 Commit 功能(开关一下, 就会执行一次)
+
+> 在生成 Logseq 网页前, 请先在 Logseq 中设置要发布哪些页面, 或者全部发布
+
+### 改变页面样式
+
+可以自行前往 [logseq/publish-spa](https://github.com/logseq/publish-spa) 参看详细命令, 然后在 /GraphsFile/.git/hook/post-commit 文件中更改 `../Node/logseq-publish-spa ../PublishWeb` 命令
 
 ### 文件目录说明
 

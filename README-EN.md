@@ -2,7 +2,7 @@
 
 [**中文简体**](./README.md) | [**English**](./README-EN.md)
 
-Effortlessly publish your Logseq graph as your own digital garden.
+Make it easier for you to publish your Logseq graph as your own digital garden.
 
 <!-- PROJECT SHIELDS -->
 
@@ -12,7 +12,7 @@ Effortlessly publish your Logseq graph as your own digital garden.
 
 ## Notice
 
-Due to GitHub file size limitations, the following files are not included in this repository. You can download the complete package from [releases](https://github.com/Haicaji/LogseqDigitalGardenTemplate/releases).
+Due to file size limitations on Github, the following files have not been uploaded, but you can download the complete package in [releases](https://github.com/Haicaji/LogseqDigitalGardenTemplate/releases).
 
 ```
 /publish-spa/
@@ -23,87 +23,101 @@ Due to GitHub file size limitations, the following files are not included in thi
 
 ## Table of Contents
 
-*   [Overview](#overview)
-*   [Getting Started](#getting-started)
-    *   [Requirements](#requirements)
-    *   [Deployment Process](#deployment-process)
-        *   [Install babashka](#install-babashka)
-        *   [Install Clojure](#install-clojure)
-        *   [Generate Static HTML Page Template](#generate-static-html-page-template)
-        *   [Initialize the /GraphsFile/ Directory](#initialize-the-graphsfile-directory)
-        *   [Initialize the /PublishWeb/ Directory](#initialize-the-publishweb-directory)
-        *   [Test it out by writing something](#test-it-out-by-writing-something)
-*   [File Directory Description](#file-directory-description)
-*   [Projects Used by This Project](#projects-used-by-this-project)
+* [Brief Introduction](#brief-introduction)
+* [Getting Started](#getting-started)
+    * [Requirements](#requirements)
+    * [Deployment Process](#deployment-process)
+        * [Install babashka](#install-babashka)
+        * [Install Clojure](#install-clojure)
+        * [Generate Static HTML Page Template](#generate-static-html-page-template)
+        * [Install publish-spa](#install-publish-spa)
+        * [Initialize the /GraphsFile/ Directory](#initialize-the-graphsfile-directory)
+        * [Initialize the /PublishWeb/ Directory](#initialize-the-publishweb-directory)
+        * [Let's Test with Something](#lets-test-with-something)
+* [Change Page Styles](#change-page-styles)
+* [File Directory Description](#file-directory-description)
+* [Other Projects Used in This Project](#other-projects-used-in-this-project)
 
-### Overview
+### Brief Introduction
 
-1.  Integrates with Logseq's automatic commit feature to trigger Git hooks and execute an automated process (detailed below).
-2.  Converts image formats (except GIFs) to `avif` to save space, while preserving filenames.
-3.  Generates a web page from your Logseq graph using `Logseq-Publish-spa`.
-4.  Uploads the generated Logseq graph webpage to GitHub and publishes it.
+1.  Integrate with Logseq's automatic commit function, implementing the Git hook to execute automation processes (the content of the process is as follows):
+2.  Convert image formats (except gif) to `avif` to save space, without changing the file name.
+3.  Generate a webpage of the Logseq graph using `Logseq-Publish-spa`.
+4.  Upload the Logseq graph webpage to Github and publish it.
+5.  Automatically delete Github deployments and workflow records.
 
 ### Getting Started
 
 #### Requirements
 
-1.  Currently only works on Windows.
-2.  Ensure Git is installed and functional on your computer.
-3.  Logseq is already installed.
-4.  JDK 17 or a later version is installed.
+1. Currently, only usable on Windows computers.
+2. Ensure that Git is usable on your computer.
+3. Logseq has been installed.
+4. JDK17 or above has been installed.
 
 #### Deployment Process
 
 ##### Install babashka
 
-Download `babashka` and add it to your system's environment variables.
+Download and add `babashka` to your environment variables.
 
-You can find a version of `babashka` in the `OtherDependencies` folder of this project, or download the latest version from [babashka releases](https://github.com/babashka/babashka/releases).
+You can find a version of `babashka` in the `OtherDependencies` folder of this project, or download the latest version from [babashka's releases](https://github.com/babashka/babashka/releases).
 
 ##### Install Clojure
 
-You can find the Clojure MSI installer in the `OtherDependencies` folder of this project, or download the latest version from [Clojure releases](https://github.com/casselc/clj-msi/releases).
+You can find the Clojure MSI file in the `OtherDependencies` folder of this project for installation, or download the latest version from [Clojure's releases](https://github.com/casselc/clj-msi/releases).
 
 ##### Generate Static HTML Page Template
 
-In the project's root directory, first clone Logseq:
+In the project directory, first clone Logseq.
 
 ```
 git clone https://github.com/logseq/logseq
 ```
 
-Then, navigate into the `logseq` directory, install dependencies, and generate the template (Why not bundle this? Because it increases the project size by about 2GB. I prefer to install it manually. All other dependencies are already installed).
+Then enter the `logseq` directory, install dependencies, and generate the template. (Why don't I install and then package? Because this step will increase the entire project volume by nearly 2G, I think it's better to install it yourself. Other dependencies are already installed).
 
 ```
-$env:Path += ";$((Convert-Path -Path '../Node/'))" # Temporarily add ../Node/ to the environment variable
 cd logseq
-yarn install --frozen-lockfile # Note the network connection, it might disconnect and you might need to redo this step.
+$env:Path += ";$((Convert-Path -Path '../Node/'))" # Temporarily add ../Node/ to environment variables
+yarn install --frozen-lockfile # Note the network connection here; it might disconnect if the network is not good and need to re-execute
 yarn gulp:build
 clojure -M:cljs release publishing
 ```
 
-If you encounter the following error, you may need to adjust the PowerShell execution policy.
+If the following error occurs, please modify the PowerShell execution script permissions.
 
 ```
 ../Node/yarn : File ......\LogseqDigitalGardenTemplate\Node\yarn.ps1 cannot be loaded because running scripts is disabled on this system. For more information, see about_Execution_Policies at https:/go.microsoft.com/fwlink/?LinkID=135170.
-At line:1 char:1
+Location Line:1 Char: 1
 + ../Node/yarn install --frozen-lockfile
 + ~~~~~~~~~~~~
-    + CategoryInfo          : SecurityError: (:) [],PSSecurityException
+    + CategoryInfo          : SecurityError: (:) []，PSSecurityException
     + FullyQualifiedErrorId : UnauthorizedAccess
 ```
 
-Modify the execution policy to allow the current user to run local scripts:
+Modify permissions command to allow the current user to execute local scripts.
 
 ```
 Set-ExecutionPolicy Remotesigned -Scope CurrentUser
 ```
 
+##### Install publish-spa
+
+In `/publish-spa/`, execute:
+
+```
+$env:Path += ";$((Convert-Path -Path '../Node/'))" # Temporarily add ../Node/ to environment variables
+npm i -g
+```
+
 ##### Initialize the /GraphsFile/ Directory
 
-Initialize a Logseq graph in the `/GraphsFile/` directory using Logseq. Generally, if there are no images, the `assets` directory won't exist. For debugging purposes, you can create one manually.
+Use Logseq to initialize a graph in the `/GraphsFile/` directory. Generally, if there are no images in the graph, there will be no `assets` file in this directory. However, for debugging purposes, you can create one yourself first.
 
-Then, initialize a Git repository in the same directory:
+Then, initialize a Git file in this directory.
+
+Execute the following commands:
 
 ```
 git init
@@ -111,25 +125,23 @@ git add -A
 git commit -m "Init"
 ```
 
-Copy the two scripts from the `/GitHookBak/` directory into the `/GraphsFile/.git/hook/` directory.
+Then, put the two scripts in the `/GitHookBak/` directory into the `/GraphsFile/.git/hook/` directory.
 
 ##### Initialize the /PublishWeb/ Directory
 
-> Before generating the Logseq webpage, ensure you have specified which pages to publish in Logseq, or you can choose to publish all pages.
+In this directory, two workflows have been written. `delete-workflow-runs.yml` is used to automatically delete Github deployments and workflow records, while `static.yml` is used to generate a Github Page.
 
-This directory contains two workflows designed to automatically delete GitHub deployments and workflow run records.
-
-Remember to replace the repository name in `/.github/delete-workflow-runs.yml` with your own.
+But remember to change the repository name in `/.github/delete-workflow-runs.yml` to your own.
 
 ```yaml
 jobs:
   del_runs:
     steps:
         with:
-          repository: 'your-github-io-repository-address-here'
+          repository: 'Here write your own github.io repository address'
 ```
 
-Create an initial Git repository in this directory:
+Create an initial Git in this directory.
 
 ```
 git init
@@ -137,47 +149,53 @@ git add -A
 git commit -m "Init"
 ```
 
-Add your GitHub remote repository:
+Add a Github remote repository.
 
 ```
 git branch -M main
-git remote add origin <your-github-repository-address>
+git remote add origin <Your Github repository address>
 ```
 
-> By the way, if you are using Git for the first time, remember to configure your Git username and email:
-> git config --global user.email <Your email>
-> git config --global user.name <Your Name>
+> Also, if you are using Git for the first time, remember to configure your Git username and email.
+> `git config --global user.email <Your email>`
+> `git config --global user.name <Your Name>`
 
-##### Test it out by writing something
+##### Let's Test with Something
 
-Enable Logseq's automatic commit feature (toggle it on and off, it will trigger once).
+Enable Logseq's automatic commit function (toggling it on/off will execute it once).
+
+> Before generating the Logseq webpage, please set which pages to publish in Logseq, or publish all of them.
+
+### Change Page Styles
+
+You can go to [logseq/publish-spa](https://github.com/logseq/publish-spa) to view detailed commands, and then change the `../Node/logseq-publish-spa ../PublishWeb` command in the `/GraphsFile/.git/hook/post-commit` file.
 
 ### File Directory Description
 
 ```
 filetree
-├── /GitHookBak/        # Backup of Git hook scripts
-│   ├── post-commit
-│   └── pre-commit
-├── /GraphsFile/        # Stores Logseq graph data
-│   ├── /.git/
-│   └── ...              # Omitted Logseq graph directory structure
-├── /ImageToAVIF/       # Scripts for converting images to AVIF format
-├── /Node/              # Node.js with pre-installed dependencies
-├── /OtherDependencies/ # Some dependencies for installation, you can download the latest versions
-├── /publish-spa/       # Project folder for publish-spa
-├── /PublishWeb/        # Generated Logseq graph webpage
-│   ├── /.git/
-│   └── ...              # Omitted Logseq graph webpage structure
-├── creatWeb.bat        # Manually generate webpage, but it will not upload
-├── ImageToAVIF.bat     # Manually convert all images in the graph to AVIF format
-├── PublishWeb.bat      # Manually perform Commit on /GraphsFile/, trigger hook to generate webpage
+├── /GitHookBak/        # Backup of git hook scripts
+│  ├── post-commit
+│  └── pre-commit
+├── /GraphsFile/        # Stores Logseq graphs
+│  ├── /.git/
+│  └── ...              # Omitted Logseq graph directory structure
+├── /ImageToAVIF/       # Scripts for converting images to avif format
+├── /Node/              # Nodejs with pre-installed dependencies
+├── /OtherDependencies/ # Some dependencies to be installed, perhaps you can download the latest version
+├── /publish-spa/       # publish-spa project folder
+├── /PublishWeb/        # Generated Logseq graph webpages
+│  ├── /.git/
+│  └── ...              # Omitted Logseq graph webpage directory structure
+├── creatWeb.bat        # Manually generate webpages, but won't upload
+├── ImageToAVIF.bat     # Manually convert all images in the graph to the specified format
+├── PublishWeb.bat      # Manually perform a commit operation on /GraphsFile/, in order to automatically execute hook scripts, realizing manual generation of web
 ├── README.md
-├── TestWebByPython.bat # Start HTTP server using Python for webpage testing
+├── TestWebByPython.bat # Use Python to start an HTTP service for testing webpages
 └── upload.log          # Git hook logs
 ```
 
-### Projects Used by This Project
+### Other Projects Used in This Project
 
 - [logseq/logseq](https://github.com/logseq/logseq)
 - [logseq/publish-spa](https://github.com/logseq/publish-spa)
